@@ -245,6 +245,7 @@ async function executeSELECTQuery(query) {
       hasAggregateWithoutGroupBy,
       orderByFields,
       limit,
+      isDistinct,
     } = parseQuery(query);
     let data = await readCSV(`${table}.csv`);
 
@@ -265,6 +266,22 @@ async function executeSELECTQuery(query) {
           throw new Error(`Unsupported JOIN type: ${joinType}`);
       }
     }
+
+    let performed = false;
+    if (joinTable && joinCondition) {
+      performed = true;
+      if (isDistinct) {
+        data = [
+          ...new Map(
+            data.map((item) => [
+              fields.map((field) => item[field]).join("|"),
+              item,
+            ])
+          ).values(),
+        ];
+      }
+    }
+
     // Apply WHERE clause filtering after JOIN (or on the original data if no join)
     let filteredData =
       whereClauses.length > 0
@@ -272,6 +289,19 @@ async function executeSELECTQuery(query) {
             whereClauses.every((clause) => evaluateCondition(row, clause))
           )
         : data;
+
+    if (!performed) {
+      if (isDistinct) {
+        data = [
+          ...new Map(
+            data.map((item) => [
+              fields.map((field) => item[field]).join("|"),
+              item,
+            ])
+          ).values(),
+        ];
+      }
+    }
 
     let groupResults = filteredData;
     if (hasAggregateWithoutGroupBy) {

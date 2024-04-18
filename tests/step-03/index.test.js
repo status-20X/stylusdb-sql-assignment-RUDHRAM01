@@ -10,19 +10,20 @@ test("Read CSV File", async () => {
   expect(data[0].age).toBe("30"); //ignore the string type here, we will fix this later
 });
 
-test("Parse SQL Query", () => {
-  const query = "SELECT id, name FROM student";
+test('Parse SQL Query', () => {
+  const query = 'SELECT id, name FROM student';
   const parsed = parseQuery(query);
   expect(parsed).toEqual({
-    fields: ["id", "name"],
-    table: "student",
-    whereClauses: [],
-    joinCondition: null,
-    joinTable: null,
-    joinType: null,
-    groupByFields: null,
-    hasAggregateWithoutGroupBy: false,
-    orderByFields: null,
-    limit: null,
+      fields: ['id', 'name'],
+      table: 'student',
+      whereClauses: [],
+      joinCondition: null,
+      joinTable: null,
+      joinType: null,
+      groupByFields: null,
+      hasAggregateWithoutGroupBy: false,
+      "orderByFields": null,
+      "limit": null,
+      isDistinct: false
   });
 });

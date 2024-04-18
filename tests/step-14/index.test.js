@@ -776,6 +776,7 @@ test('DISTINCT with JOIN Operations', async () => {
     const query = 'SELECT DISTINCT student.name FROM student INNER JOIN enrollment ON student.id = enrollment.student_id';
     const result = await executeSELECTQuery(query);
     // Expecting names of students who are enrolled in any course
+    console.log(result);
     expect(result).toEqual([{ "student.name": 'John' }, { "student.name": 'Jane' }, { "student.name": 'Bob' }]);
 });
 
